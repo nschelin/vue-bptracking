@@ -13,7 +13,10 @@ const err = chalk.red;
 const app = express();
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+
+const api = require('./api');
+app.use('/api', api);
 
 const connectionString = process.env.CONNECTION_STRING || '';
 
