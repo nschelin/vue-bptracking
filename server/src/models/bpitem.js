@@ -31,7 +31,7 @@ const bpItemSchema = new Schema({
 		default: Date.now,
 	},
 	user: {
-		type: mongoose.Scheama.Types.ObjectId,
+		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',
 	},
 });
