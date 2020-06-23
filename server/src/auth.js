@@ -11,8 +11,13 @@ passport.use(
 		},
 		async (email, password, done) => {
 			try {
-				const user = await User.create({ email, password });
-				return done(null, user);
+				const foundUser = await User.findOne({ email });
+				if (!foundUser) {
+					const user = await User.create({ email, password });
+					return done(null, user);
+				} else {
+					return done(null, false, { message: 'Email exists' });
+				}
 			} catch (error) {
 				done(error);
 			}
