@@ -1,6 +1,11 @@
+// much learned from:
+// https://www.digitalocean.com/community/tutorials/api-authentication-with-json-web-tokensjwt-and-passport
 const passport = require('passport');
+const jwtStrategy = require('passport-jwt').Strategy;
+const extractJwt = require('passport-jwt').ExtractJwt;
 const localStrategy = require('passport-local').Strategy;
 const { User } = require('./models');
+const secret = process.env.SECRET;
 
 passport.use(
 	'signup',
@@ -41,11 +46,28 @@ passport.use(
 				}
 
 				const validate = await user.isValidPassword(password);
-				if (!validate) return done(null, false, { message: 'Wrong Password' });
+				if (!validate)
+					return done(null, false, { message: 'Wrong Password' });
 
 				return done(null, user, { message: 'Logged in Successfully' });
 			} catch (error) {
 				console.log(error);
+				done(error);
+			}
+		}
+	)
+);
+
+passport.use(
+	new jwtStrategy(
+		{
+			secretOrKey: secret,
+			jwtFromRequest: extractJwt.fromAuthHeaderAsBearerToken(),
+		},
+		async (token, done) => {
+			try {
+				return done(null, token.user);
+			} catch (error) {
 				done(error);
 			}
 		}

@@ -21,4 +21,10 @@ router.post(
 	userController.signup
 );
 
+router.get(
+	'/profile',
+	passport.authenticate('jwt', { session: false }),
+	userController.profile
+);
+
 module.exports = router;

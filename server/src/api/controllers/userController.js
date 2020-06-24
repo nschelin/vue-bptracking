@@ -2,6 +2,12 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const secret = process.env.SECRET;
 
+exports.profile = (req, res) => {
+	res.json({
+		message: 'Profile Info',
+	});
+};
+
 exports.signup = async (req, res) => {
 	const { user } = req;
 	res.json({
@@ -18,7 +24,7 @@ exports.login = async (req, res, next) => {
 				return next(error);
 			}
 
-			req.login(user, { session: false }, async (error) => {
+			req.login(user, { session: false }, async error => {
 				if (error) return next(error);
 
 				const body = { _id: user._id, email: user.email };
