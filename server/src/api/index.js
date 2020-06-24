@@ -16,4 +16,10 @@ router.get(
 	userController.profile
 );
 
+router.put(
+	'/update',
+	passport.authenticate('jwt', { session: false }),
+	userController.update
+);
+
 module.exports = router;

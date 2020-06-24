@@ -4,11 +4,33 @@ const secret = process.env.SECRET;
 const { User } = require('../../models');
 
 exports.profile = async (req, res) => {
-	const { user: userInfo } = req;
-	const user = await User.findById(
-		userInfo._id,
-		'email firstName lastName created modified'
-	);
+	const {
+		user: { _id },
+	} = req;
+	const user = await getUser(_id);
+
+	if (user) {
+		res.json({
+			user,
+			message: 'Profile found',
+		});
+	} else {
+		res.json({
+			message: 'Profile not found',
+		});
+	}
+};
+
+exports.update = async (req, res) => {
+	const {
+		user: { _id },
+		body: { firstName, lastName },
+	} = req;
+	const user = await getUser(_id);
+
+	user.firstName = firstName;
+	user.lastName = lastName;
+	await user.save();
 
 	if (user) {
 		res.json({
@@ -23,7 +45,11 @@ exports.profile = async (req, res) => {
 };
 
 exports.signup = async (req, res) => {
-	const { user } = req;
+	const {
+		user: { _id },
+	} = req;
+	const user = await getUser(_id);
+
 	res.json({
 		message: 'Signup successful',
 		user,
@@ -31,7 +57,7 @@ exports.signup = async (req, res) => {
 };
 
 exports.login = async (req, res, next) => {
-	passport.authenticate('login', async (err, user, info) => {
+	passport.authenticate('login', async (err, user) => {
 		try {
 			if (err || !user) {
 				const error = new Error('Error occurred');
@@ -51,3 +77,7 @@ exports.login = async (req, res, next) => {
 		}
 	})(req, res, next);
 };
+
+async function getUser(id) {
+	return await User.findById(id, 'email firstName lastName created modified');
+}
