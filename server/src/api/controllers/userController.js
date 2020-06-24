@@ -1,11 +1,25 @@
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const secret = process.env.SECRET;
+const { User } = require('../../models');
 
-exports.profile = (req, res) => {
-	res.json({
-		message: 'Profile Info',
-	});
+exports.profile = async (req, res) => {
+	const { user: userInfo } = req;
+	const user = await User.findById(
+		userInfo._id,
+		'email firstName lastName created modified'
+	);
+
+	if (user) {
+		res.json({
+			user,
+			message: 'Profile found',
+		});
+	} else {
+		res.json({
+			message: 'Profile not found',
+		});
+	}
 };
 
 exports.signup = async (req, res) => {

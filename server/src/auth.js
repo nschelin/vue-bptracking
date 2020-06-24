@@ -13,18 +13,25 @@ passport.use(
 		{
 			usernameField: 'email',
 			passwordField: 'password',
+			passReqToCallback: true,
 		},
-		async (email, password, done) => {
+		async (req, email, password, done) => {
+			const { firstName = null, lastName = null } = req.body;
 			try {
 				const foundUser = await User.findOne({ email });
 				if (!foundUser) {
-					const user = await User.create({ email, password });
+					const user = await User.create({
+						email,
+						password,
+						firstName,
+						lastName,
+					});
 					return done(null, user);
 				} else {
 					return done(null, false, { message: 'Email exists' });
 				}
 			} catch (error) {
-				done(error);
+				return done(error);
 			}
 		}
 	)
