@@ -1,6 +1,7 @@
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const secret = process.env.SECRET;
+const expires = process.env.EXPIRES;
 const { User } = require('../../models');
 
 exports.profile = async (req, res) => {
@@ -64,11 +65,11 @@ exports.login = async (req, res, next) => {
 				return next(error);
 			}
 
-			req.login(user, { session: false }, async error => {
+			req.login(user, { session: false }, async (error) => {
 				if (error) return next(error);
 
 				const body = { _id: user._id, email: user.email };
-				const token = jwt.sign({ user: body }, secret);
+				const token = jwt.sign({ user: body }, secret, { expiresIn: expires });
 
 				return res.json({ token });
 			});
