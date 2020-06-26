@@ -23,6 +23,18 @@ router.put(
 	userController.update
 );
 
+router.get(
+	'/bpitem/:id',
+	passport.authenticate('jwt', { session: false }),
+	bpItemController.get
+);
+
+router.get(
+	'/bpitems',
+	passport.authenticate('jwt', { session: false }),
+	bpItemController.getAll
+);
+
 router.post(
 	'/bpitem/add',
 	passport.authenticate('jwt', { session: false }),

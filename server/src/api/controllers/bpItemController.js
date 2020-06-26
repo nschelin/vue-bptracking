@@ -2,6 +2,29 @@ const { BpItem } = require('../../models');
 const { getUser, getBpItem } = require('../utils');
 const bpitem = require('../../models/bpitem');
 
+exports.get = async (req, res) => {
+	const { id: bpItemId } = req.params;
+	const bpItem = await getBpItem(bpItemId);
+
+	res.json({
+		message: 'Retrieved',
+		bpItem,
+	});
+};
+
+exports.getAll = async (req, res) => {
+	const {
+		user: { _id },
+	} = req;
+
+	const user = await getUser(_id);
+	const { bpItems } = user;
+	res.json({
+		message: 'Retrieved',
+		bpItems,
+	});
+};
+
 exports.add = async (req, res) => {
 	const {
 		user: { _id },
