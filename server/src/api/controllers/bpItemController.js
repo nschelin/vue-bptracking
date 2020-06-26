@@ -1,12 +1,13 @@
 const { BpItem } = require('../../models');
-const { getUser } = require('../utils');
+const { getUser, getBpItem } = require('../utils');
+const bpitem = require('../../models/bpitem');
 
 exports.add = async (req, res) => {
 	const {
 		user: { _id },
 	} = req;
 
-	const { date, systolic, diastolic, bpm, notes } = req.body;
+	const { date, systolic, diastolic, bpm, notes, position } = req.body;
 
 	const user = await getUser(_id);
 
@@ -17,6 +18,7 @@ exports.add = async (req, res) => {
 		bpm,
 		notes,
 		user,
+		position,
 	});
 
 	if (!user.bpItems) {
@@ -28,5 +30,26 @@ exports.add = async (req, res) => {
 
 	res.json({
 		message: 'Saved',
+		bpItemId: bpItem._id,
+	});
+};
+
+exports.update = async (req, res) => {
+	const { id: bpItemId } = req.params;
+
+	const { date, systolic, diastolic, bpm, notes, position } = req.body;
+
+	const bpItem = await getBpItem(bpItemId);
+	bpItem.date = date;
+	bpItem.systolic = systolic;
+	bpItem.diastolic = diastolic;
+	bpItem.bpm = bpm;
+	bpitem.notes = notes;
+	bpItem.position = position;
+
+	await bpItem.save();
+	res.json({
+		message: 'Updated',
+		bpItemId: bpItem._id,
 	});
 };

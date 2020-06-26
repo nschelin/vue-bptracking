@@ -27,6 +27,11 @@ const bpItemSchema = new Schema(
 			required: true,
 			min: 0,
 		},
+		position: {
+			type: String,
+			enum: ['Sitting', 'Standing'],
+			default: 'Sitting',
+		},
 		notes: String,
 		user: {
 			type: mongoose.Schema.Types.ObjectId,

@@ -29,4 +29,10 @@ router.post(
 	bpItemController.add
 );
 
+router.put(
+	'/bpitem/update/:id',
+	passport.authenticate('jwt', { session: false }),
+	bpItemController.update
+);
+
 module.exports = router;
