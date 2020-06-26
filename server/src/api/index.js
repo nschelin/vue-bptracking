@@ -35,4 +35,10 @@ router.put(
 	bpItemController.update
 );
 
+router.delete(
+	'/bpitem/delete/:id',
+	passport.authenticate('jwt', { session: false }),
+	bpItemController.delete
+);
+
 module.exports = router;

@@ -53,3 +53,23 @@ exports.update = async (req, res) => {
 		bpItemId: bpItem._id,
 	});
 };
+
+exports.delete = async (req, res) => {
+	const {
+		user: { _id },
+	} = req;
+
+	const { id: bpItemId } = req.params;
+
+	const user = await getUser(_id);
+
+	const index = user.bpItems.findIndex(c => c._id === bpItemId);
+	user.bpItems.splice(index, 1);
+	await user.save();
+
+	await BpItem.findByIdAndDelete(bpItemId);
+	res.json({
+		message: 'Deleted',
+		bpItemId,
+	});
+};
