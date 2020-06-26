@@ -7,6 +7,7 @@ const userSchema = new Schema(
 		// Mongoose will cast the string version to ObjectId
 		_id: {
 			type: mongoose.ObjectId,
+			auto: true,
 		},
 		email: {
 			type: String,
