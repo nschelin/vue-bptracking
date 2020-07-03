@@ -3,7 +3,7 @@ const getUser = async id => {
 	return await User.findById(
 		id,
 		'email firstName lastName created modified'
-	).populate('bpItems');
+	).populate({ path: 'bpItems', options: { sort: { created: -1 } } });
 };
 
 const getBpItem = async id => {

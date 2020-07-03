@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
+import Home from '@/views/Home.vue';
+import store from '@/store';
 
 Vue.use(VueRouter);
 
@@ -9,6 +10,14 @@ const routes = [
 		path: '/',
 		name: 'Home',
 		component: Home
+	},
+	{
+		path: '/bp',
+		name: 'BloodPressure',
+		meta: {
+			requiresAuth: true
+		},
+		component: () => import(/* webpackChunkName: "bp" */ '../views/BloodPressure.vue')
 	},
 	{
 		path: '/about',
@@ -26,4 +35,11 @@ const router = new VueRouter({
 	routes
 });
 
+router.beforeEach((to, from, next) => {
+	if (to.matched.some(r => r.meta.requiresAuth) && !store.getters.isAuthenticated) {
+		next({ name: 'Home' });
+	} else {
+		next();
+	}
+});
 export default router;

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { loginService } from '../services';
+import { loginService, bpService } from '../services';
 
 Vue.use(Vuex);
 
@@ -10,7 +10,8 @@ const store = new Vuex.Store({
 		name: {
 			fistName: '',
 			lastName: ''
-		}
+		},
+		recentBpItems: []
 	},
 	getters: {
 		isAuthenticated(state) {
@@ -27,6 +28,9 @@ const store = new Vuex.Store({
 		LOGOUT() {
 			localStorage.removeItem('token');
 			location.reload();
+		},
+		SET_RECENT(state, { bpItems }) {
+			state.recentBpItems = bpItems;
 		}
 	},
 	actions: {
@@ -36,6 +40,10 @@ const store = new Vuex.Store({
 		},
 		async logout({ commit }) {
 			commit('LOGOUT');
+		},
+		async getRecent({ commit }, maxItems) {
+			const { data } = await bpService.getRecent(maxItems);
+			commit('SET_RECENT', data);
 		}
 	},
 	modules: {}
