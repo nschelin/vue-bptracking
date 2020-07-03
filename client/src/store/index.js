@@ -32,7 +32,6 @@ const store = new Vuex.Store({
 	actions: {
 		async login({ commit }, credentials) {
 			const response = await loginService.login(credentials.email, credentials.password);
-
 			commit('LOGIN', response.data);
 		},
 		async logout({ commit }) {
@@ -41,5 +40,10 @@ const store = new Vuex.Store({
 	},
 	modules: {}
 });
+
+if (localStorage.getItem('token')) {
+	const token = localStorage.getItem('token');
+	store.commit('LOGIN', { token });
+}
 
 export default store;

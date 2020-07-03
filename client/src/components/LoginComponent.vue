@@ -28,15 +28,18 @@ export default {
 		password: ''
 	}),
 	methods: {
-		async submit() {
+		submit() {
 			if (this.$refs.loginForm.validate()) {
 				const creds = { email: this.email, password: this.password };
-				await this.$store.dispatch('login', creds);
-				this.email = this.password = '';
-				this.$refs.loginForm.reset();
+				if (this.$store.dispatch('login', creds)) {
+					this.email = this.password = '';
+					this.$refs.loginForm.reset();
+					this.$emit('close', null);
+				}
 			}
 		},
 		cancel() {
+			this.$emit('close', null);
 			this.email = this.password = '';
 			this.$refs.loginForm.reset();
 		}
