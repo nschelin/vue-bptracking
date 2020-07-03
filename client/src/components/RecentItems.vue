@@ -17,12 +17,14 @@
 				<v-chip label class="white--text" :color="getColor(item.bpm, 'bpm')">{{ item.bpm }}</v-chip>
 			</template>
 		</v-data-table>
+		<svg id="barChart" width="500" height="500"></svg>
 	</div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import { format, parseISO } from 'date-fns';
+import * as d3 from 'd3';
 
 export default {
 	name: 'RecentItems',
@@ -60,7 +62,8 @@ export default {
 				sortable: true,
 				value: 'bpm'
 			}
-		]
+		],
+		chart: null
 	}),
 	computed: {
 		...mapState({
@@ -92,8 +95,64 @@ export default {
 	},
 	async created() {
 		await this.$store.dispatch('getRecent', this.maxItems);
+		const svg = d3.select('#barChart');
+		const margin = 200,
+			width = svg.attr('width') - margin,
+			height = svg.attr('height') - margin;
+
+		const xScale = d3
+			.scaleBand()
+			.range([0, width])
+			.padding(0.4);
+		const yScale = d3.scaleLinear().range([height, 0]);
+
+		const g = svg.append('g').attr('transform', 'translate(100,100)');
+
+		xScale.domain(this.recentBpItems.map(d => d.systolic));
+		yScale.domain([0, d3.max(this.recentBpItems, d => d.systolic)]);
+		g.append('g')
+			.attr('transform', `translate(0, ${height})`)
+			.call(d3.axisBottom(xScale));
+
+		g.append('g').call(
+			d3
+				.axisLeft(yScale)
+				.tickFormat(d => `${d}`)
+				.ticks(5)
+		);
+
+		g.selectAll('.bar')
+			.data(this.recentBpItems)
+			.enter()
+			.append('rect')
+			.attr('class', d => {
+				const val = d.systolic;
+				if (val <= 129) {
+					return 'bar normal';
+				} else if (val < 139 && val > 129) {
+					return 'bar stage-1-high';
+				} else {
+					return 'bar stage-2-high';
+				}
+			})
+			.attr('x', d => xScale(d.systolic))
+			.attr('y', d => yScale(d.systolic))
+			.attr('width', xScale.bandwidth())
+			.attr('height', d => height - yScale(d.systolic));
 	}
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.bar {
+	&.normal {
+		fill: #4caf50;
+	}
+	&.stage-1-high {
+		fill: #ff9800;
+	}
+	&.stage-2-high {
+		fill: #f44336;
+	}
+}
+</style>
