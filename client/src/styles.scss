@@ -1,0 +1,25 @@
+$transition-time: 0.3s;
+$no-opacity: 0;
+$translate: -20px;
+
+// Slide Fade Left
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+	transition: all $transition-time;
+}
+.slide-fade-enter,
+.slide-fade-leave-to {
+	opacity: $no-opacity;
+	transform: translateX($translate);
+}
+
+// Slide Fade Down
+.slide-fade-down-enter-active,
+.slide-fade-down-leave-active {
+	transition: all $transition-time;
+}
+.slide-fade-down-enter,
+.slide-fade-down-leave-to {
+	opacity: $no-opacity;
+	transform: translateY($translate);
+}

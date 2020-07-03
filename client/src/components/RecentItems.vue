@@ -91,7 +91,6 @@ export default {
 		}
 	},
 	async created() {
-		console.log(this.maxItems);
 		await this.$store.dispatch('getRecent', this.maxItems);
 	}
 };

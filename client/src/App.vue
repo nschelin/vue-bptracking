@@ -111,17 +111,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import './styles.scss';
 .v-toolbar__content {
 	cursor: pointer;
-}
-
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-	transition: all 0.3s;
-}
-.slide-fade-enter,
-.slide-fade-leave-to {
-	opacity: 0;
-	transform: translateX(-20px);
 }
 </style>
