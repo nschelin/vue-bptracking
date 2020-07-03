@@ -5,7 +5,8 @@
 
 			<v-spacer></v-spacer>
 			<v-toolbar-items>
-				<v-btn text>Login</v-btn>
+				<v-btn text v-if="!isAuthenticated">Login</v-btn>
+				<v-btn text v-else @click="logout">Logout</v-btn>
 			</v-toolbar-items>
 		</v-app-bar>
 
@@ -16,17 +17,19 @@
 </template>
 
 <script>
-// import Home from './components/HelloWorld';
+import { mapState } from 'vuex';
 
 export default {
 	name: 'App',
-
-	components: {
-		// HelloWorld
+	computed: {
+		...mapState({
+			isAuthenticated: state => state.isAuthenticated
+		})
 	},
-
-	data: () => ({
-		//
-	})
+	methods: {
+		async logout() {
+			await this.$store.dispatch('logout');
+		}
+	}
 };
 </script>
