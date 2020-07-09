@@ -35,6 +35,12 @@ router.get(
 	bpItemController.getAll
 );
 
+router.get(
+	'/bpitems/recent',
+	passport.authenticate('jwt', { session: false }),
+	bpItemController.getRecent
+);
+
 router.post(
 	'/bpitem/add',
 	passport.authenticate('jwt', { session: false }),

@@ -16,22 +16,14 @@ exports.getAll = async (req, res) => {
 	const {
 		user: { _id },
 	} = req;
-	const max = +req.query.max;
+
 	const user = await getUser(_id);
 	const { bpItems } = user;
 
-	if (max && max > 0) {
-		const recentBpItems = bpItems.slice(0, max);
-		res.json({
-			message: 'Retrieved',
-			bpItems: recentBpItems,
-		});
-	} else {
-		res.json({
-			message: 'Retrieved',
-			bpItems,
-		});
-	}
+	res.json({
+		message: 'Retrieved',
+		bpItems,
+	});
 };
 
 exports.getRecent = async (req, res) => {
@@ -39,11 +31,16 @@ exports.getRecent = async (req, res) => {
 		user: { _id },
 	} = req;
 
+	const defaultMax = 3;
+	const max = +req.query.max || defaultMax;
 	const user = await getUser(_id);
 	const { bpItems } = user;
+
+	const recentBpItems = bpItems.slice(0, max);
+
 	res.json({
 		message: 'Retrieved',
-		recentBpItems,
+		bpItems: recentBpItems,
 	});
 };
 
