@@ -5,7 +5,7 @@
 		</h2>
 		<v-data-table :headers="headers" :items="recentBpItems" hide-default-footer disable-pagination>
 			<template #item.date="{ item }">
-				{{ format(item.date) }}
+				{{ formatDate(item.date) }}
 			</template>
 			<template #item.systolic="{ item }">
 				<v-chip label class="white--text" :color="getColor(item.systolic, 'sys')">{{ item.systolic }}</v-chip>
@@ -23,7 +23,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { format, parseISO } from 'date-fns';
+import { formatDate, getColor } from '@/util';
 import * as d3 from 'd3';
 
 export default {
@@ -71,27 +71,8 @@ export default {
 		})
 	},
 	methods: {
-		format(date) {
-			return date ? format(parseISO(date), 'MM/dd/yyyy') : '';
-		},
-		getColor(val, type) {
-			switch (type) {
-				case 'sys':
-					if (val <= 129) return 'green';
-					else if (val < 139 && val > 129) return 'orange';
-					else return 'red';
-				case 'dia':
-					if (val <= 80) return 'green';
-					else if (val < 89 && val > 80) return 'orange';
-					else return 'red';
-
-				case 'bpm':
-					if (val > 60 && val <= 100) return 'green';
-					else return 'orange';
-				default:
-					break;
-			}
-		}
+		formatDate,
+		getColor
 	},
 	async created() {
 		await this.$store.dispatch('getRecent', this.maxItems);
