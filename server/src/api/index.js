@@ -30,15 +30,15 @@ router.get(
 );
 
 router.get(
-	'/bpitems',
-	passport.authenticate('jwt', { session: false }),
-	bpItemController.getAll
-);
-
-router.get(
 	'/bpitems/recent',
 	passport.authenticate('jwt', { session: false }),
 	bpItemController.getRecent
+);
+
+router.get(
+	'/bpitems/:page?',
+	passport.authenticate('jwt', { session: false }),
+	bpItemController.getAll
 );
 
 router.post(

@@ -17,12 +17,24 @@ exports.getAll = async (req, res) => {
 		user: { _id },
 	} = req;
 
+	const perPage = 10;
 	const user = await getUser(_id);
 	const { bpItems } = user;
+	let page = +req.params.page || 0;
+	page = page > 1 ? page - 1 : 0;
 
+	const start = page * perPage;
+	const end = page * perPage + perPage;
+
+	const totalPages = Math.ceil(bpItems.length / perPage);
+	const pagedItems = bpItems.slice(start, end);
+	let currentPage = page > 0 ? page + 1 : 1;
 	res.json({
 		message: 'Retrieved',
-		bpItems,
+		bpItems: pagedItems,
+		totalItems: bpItems.length,
+		totalPages,
+		currentPage,
 	});
 };
 

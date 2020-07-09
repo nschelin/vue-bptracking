@@ -1,10 +1,16 @@
 <template>
-	<div>Blood Pressure</div>
+	<div>
+		<BpItems />
+	</div>
 </template>
 
 <script>
+import BpItems from '@/components/BpItems';
 export default {
-	name: 'BloodPressure'
+	name: 'BloodPressure',
+	components: {
+		BpItems
+	}
 };
 </script>
 

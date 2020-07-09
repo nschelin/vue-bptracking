@@ -11,6 +11,9 @@ const store = new Vuex.Store({
 			fistName: '',
 			lastName: ''
 		},
+		bpItems: [],
+		totalItems: 0,
+		totalPages: 0,
 		recentBpItems: []
 	},
 	getters: {
@@ -31,6 +34,11 @@ const store = new Vuex.Store({
 		},
 		SET_RECENT(state, { bpItems }) {
 			state.recentBpItems = bpItems;
+		},
+		SET_BPITEMS(state, data) {
+			state.bpItems = [...state.bpItems, ...data.bpItems];
+			state.totalItems = data.totalItems;
+			state.totalPages = data.totalPages;
 		}
 	},
 	actions: {
@@ -44,6 +52,11 @@ const store = new Vuex.Store({
 		async getRecent({ commit }, maxItems) {
 			const { data } = await bpService.getRecent(maxItems);
 			commit('SET_RECENT', data);
+		},
+		async getBpItems({ commit }, page = 1) {
+			const { data } = await bpService.getBpItems(page);
+			console.log(data);
+			commit('SET_BPITEMS', data);
 		}
 	},
 	modules: {}
