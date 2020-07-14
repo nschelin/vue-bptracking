@@ -75,16 +75,22 @@ export default {
 	},
 	watch: {
 		options: {
-			// eslint-disable-next-line no-unused-vars
-			async handler(val, oldval) {
-				await this.$store.dispatch('getBpItems', val.page);
+			// eslint-disable-next-line
+			async handler(opts, oldOpts) {
+				if (oldOpts.page) {
+					const { page, sortBy, sortDesc } = opts;
+					const sortField = sortBy.length > 0 ? sortBy[0] : 'modified';
+					const sortDir = sortDesc.length > 0 ? (sortDesc[0] == true ? 'desc' : 'asc') : 'desc';
+					console.log(sortField, sortDir);
+					await this.$store.dispatch('getBpItems', { page, sortField, sortDir });
+				}
 			},
 			deep: true
 		}
+	},
+	async created() {
+		await this.$store.dispatch('getBpItems', { page: 1, sortField: 'modified', sortDir: 'desc' });
 	}
-	// async created() {
-	// 	await this.$store.dispatch('getBpItems');
-	// }
 };
 </script>
 

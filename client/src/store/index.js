@@ -53,9 +53,8 @@ const store = new Vuex.Store({
 			const { data } = await bpService.getRecent(maxItems);
 			commit('SET_RECENT', data);
 		},
-		async getBpItems({ commit }, page = 1) {
-			const { data } = await bpService.getBpItems(page);
-			console.log(data);
+		async getBpItems({ commit }, pagination) {
+			const { data } = await bpService.getBpItems(pagination.page, pagination.sortField, pagination.sortDir);
 			commit('SET_BPITEMS', data);
 		}
 	},

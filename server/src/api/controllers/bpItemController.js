@@ -23,12 +23,29 @@ exports.getAll = async (req, res) => {
 	let page = +req.params.page || 0;
 	page = page > 1 ? page - 1 : 0;
 
+	let sortDir = req.query.sd || 'desc';
+	let sortField = req.query.sf || 'modified';
+
+	let sortedItems = [];
+
+	sortedItems = bpItems.sort((a, b) => {
+		switch (sortDir) {
+			case 'desc':
+				return a[sortField] - b[sortField];
+			case 'asc':
+				return b[sortField] - a[sortField];
+			default:
+				return a[sortField] - b[sortField];
+		}
+	});
+
 	const start = page * perPage;
 	const end = page * perPage + perPage;
 
-	const totalPages = Math.ceil(bpItems.length / perPage);
-	const pagedItems = bpItems.slice(start, end);
+	const pagedItems = sortedItems.slice(start, end);
+	const totalPages = Math.ceil(pagedItems.length / perPage);
 	let currentPage = page > 0 ? page + 1 : 1;
+
 	res.json({
 		message: 'Retrieved',
 		bpItems: pagedItems,
