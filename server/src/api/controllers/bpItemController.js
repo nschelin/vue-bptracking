@@ -20,22 +20,19 @@ exports.getAll = async (req, res) => {
 	const perPage = 10;
 	const user = await getUser(_id);
 	const { bpItems } = user;
-	let page = +req.params.page || 0;
-	page = page > 1 ? page - 1 : 0;
 
-	let sortDir = req.query.sd || 'desc';
-	let sortField = req.query.sf || 'modified';
+	const page = +req.params.page > 1 ? +req.params.page - 1 : 0;
+	// page = page > 1 ? page - 1 : 0;
 
-	let sortedItems = [];
+	const sortDir = req.query.sd || 'desc';
+	const sortField = req.query.sf || 'modified';
 
-	sortedItems = bpItems.sort((a, b) => {
+	const sortedItems = [...bpItems].sort((a, b) => {
 		switch (sortDir) {
 			case 'desc':
 				return a[sortField] - b[sortField];
 			case 'asc':
 				return b[sortField] - a[sortField];
-			default:
-				return a[sortField] - b[sortField];
 		}
 	});
 
@@ -44,7 +41,7 @@ exports.getAll = async (req, res) => {
 
 	const pagedItems = sortedItems.slice(start, end);
 	const totalPages = Math.ceil(pagedItems.length / perPage);
-	let currentPage = page > 0 ? page + 1 : 1;
+	const currentPage = page > 0 ? page + 1 : 1;
 
 	res.json({
 		message: 'Retrieved',

@@ -61,7 +61,7 @@ export default {
 			}
 		],
 		options: {},
-		loading: false
+		loading: true
 	}),
 	computed: {
 		...mapState({
@@ -77,12 +77,15 @@ export default {
 		options: {
 			// eslint-disable-next-line
 			async handler(opts, oldOpts) {
+				// only update if there was an older value
 				if (oldOpts.page) {
+					this.loading = true;
 					const { page, sortBy, sortDesc } = opts;
 					const sortField = sortBy.length > 0 ? sortBy[0] : 'modified';
 					const sortDir = sortDesc.length > 0 ? (sortDesc[0] == true ? 'desc' : 'asc') : 'desc';
-					console.log(sortField, sortDir);
+
 					await this.$store.dispatch('getBpItems', { page, sortField, sortDir });
+					this.loading = false;
 				}
 			},
 			deep: true
@@ -90,6 +93,7 @@ export default {
 	},
 	async created() {
 		await this.$store.dispatch('getBpItems', { page: 1, sortField: 'modified', sortDir: 'desc' });
+		this.loading = false;
 	}
 };
 </script>
