@@ -36,7 +36,7 @@ const store = new Vuex.Store({
 			state.recentBpItems = bpItems;
 		},
 		SET_BPITEMS(state, data) {
-			state.bpItems = [...state.bpItems, ...data.bpItems];
+			state.bpItems = data.bpItems;
 			state.totalItems = data.totalItems;
 			state.totalPages = data.totalPages;
 		}

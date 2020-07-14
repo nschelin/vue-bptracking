@@ -4,7 +4,13 @@
 			<v-row>
 				<v-col cols="6">
 					<h2>Blood Pressure</h2>
-					<v-data-table :headers="headers" :items="bpItems">
+					<v-data-table
+						:headers="headers"
+						:items="bpItems"
+						:server-items-length="totalItems"
+						:loading="loading"
+						:options.sync="options"
+					>
 						<template #item.date="{ item }">
 							{{ formatDate(item.date) }}
 						</template>
@@ -53,20 +59,32 @@ export default {
 				sortable: true,
 				value: 'bpm'
 			}
-		]
+		],
+		options: {},
+		loading: false
 	}),
 	computed: {
 		...mapState({
-			bpItems: state => state.bpItems
+			bpItems: state => state.bpItems,
+			totalItems: state => state.totalItems
 		})
 	},
 	methods: {
 		formatDate,
 		getColor
 	},
-	async created() {
-		await this.$store.dispatch('getBpItems');
+	watch: {
+		options: {
+			// eslint-disable-next-line no-unused-vars
+			async handler(val, oldval) {
+				await this.$store.dispatch('getBpItems', val.page);
+			},
+			deep: true
+		}
 	}
+	// async created() {
+	// 	await this.$store.dispatch('getBpItems');
+	// }
 };
 </script>
 
