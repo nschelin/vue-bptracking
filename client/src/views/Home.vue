@@ -1,12 +1,12 @@
 <template>
 	<div class="home">
-		<v-container>
+		<v-container class="fill-height">
 			<v-row>
-				<v-col>
+				<v-col cols="6">
 					<h2>Home</h2>
 				</v-col>
 				<transition name="slide-fade-down" mode="out-in">
-					<v-col v-if="isAuthenticated">
+					<v-col cols="6" v-if="isAuthenticated">
 						<RecentItems heading="Recent Items" :max-items="5" :show-total="true" />
 					</v-col>
 				</transition>

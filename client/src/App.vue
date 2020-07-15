@@ -33,18 +33,20 @@
 			<v-toolbar-title @click="$router.push({ name: 'Home' })">Blood Pressure</v-toolbar-title>
 
 			<v-spacer></v-spacer>
+
 			<v-toolbar-items>
+				<v-btn text class="mx-6" v-if="isAuthenticated" @click="goToBpItems">
+					Add New Record <v-icon class="white--text">mdi-plus</v-icon>
+				</v-btn>
 				<v-btn text v-if="!isAuthenticated" @click="dialog = true">Login</v-btn>
 				<v-btn text v-else @click="logout">Logout</v-btn>
 			</v-toolbar-items>
 		</v-app-bar>
 
 		<v-main class="ma-6">
-			<v-container>
-				<transition name="slide-fade" mode="out-in">
-					<router-view></router-view>
-				</transition>
-			</v-container>
+			<transition name="slide-fade" mode="out-in">
+				<router-view></router-view>
+			</transition>
 		</v-main>
 
 		<v-dialog v-model="dialog" width="600px" persistent>
@@ -84,6 +86,9 @@ export default {
 		})
 	},
 	methods: {
+		goToBpItems() {
+			this.$router.push({ name: 'BloodPressure', params: { newItem: 1 } });
+		},
 		async logout() {
 			await this.$store.dispatch('logout');
 		},
