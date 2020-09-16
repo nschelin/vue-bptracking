@@ -1,4 +1,6 @@
 require('dotenv').config();
+const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const mongoose = require('mongoose');
 
@@ -22,6 +24,16 @@ app.use('/api', api);
 
 app.use('/api', require('./api'));
 
+app.use(express.static(path.join(__dirname, '/public')));
+
+app.get('/', (req, res) => {
+	if (fs.existsSync(path.join(__dirname, '/public'))) {
+		res.sendFile(path.join(__dirname, '/public/index.html'));
+	} else {
+		res.json({ message: 'Hi!' });
+	}
+});
+
 const connectionString = process.env.CONNECTION_STRING || '';
 
 if (connectionString) {
@@ -34,8 +46,8 @@ if (connectionString) {
 
 	mongoose
 		.connect(connectionString, mongooseOpts)
-		.then(res => console.log(msg('Connected to MongoDb')))
-		.catch(error => console.log(err(error)));
+		.then((res) => console.log(msg('Connected to MongoDb')))
+		.catch((error) => console.log(err(error)));
 	mongoose.Promise = global.Promise;
 } else {
 	console.log(err('Connection String'));

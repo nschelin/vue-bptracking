@@ -1,1 +1,37 @@
-version: '3.7s'
+version: '3.7'
+
+services:
+  vbp-web:
+    image: vbp
+    container_name: 'vbp-web'
+    ports:
+      - '8080:5000'
+    depends_on:
+      - vbp-db
+    networks:
+      vbp-network:
+        ipv4_address: 172.16.0.2
+
+  vbp-db:
+    image: mongo
+    container_name: vbp-db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INTIDB_ROOT_PASSWORD=secretpassword
+      - MONGO_INITDB_DATABASE=bptracking
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ~/data/db:/data/db
+    ports:
+      - '27017:27017'
+    networks:
+      vbp-network:
+        ipv4_address: 172.16.0.3
+
+networks:
+  vbp-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.0.0/24
