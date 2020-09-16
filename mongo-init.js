@@ -1,6 +1,5 @@
 const { Db } = require('mongodb');
-
-db.createUser({
+db = db.db.createUser({
 	user: 'admin',
 	pwd: 'secret',
 	roles: [
