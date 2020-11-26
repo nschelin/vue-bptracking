@@ -61,6 +61,7 @@ exports.login = async (req, res, next) => {
 	passport.authenticate('login', async (err, user) => {
 		try {
 			if (err || !user) {
+				res.json({ msg: 'Error'})
 				const error = new Error('Error occurred');
 				return next(error);
 			}

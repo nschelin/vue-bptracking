@@ -90,17 +90,25 @@ export default {
 	computed: {
 		...mapState({
 			bpItems: state => state.bpItems,
-			totalItems: state => state.totalItems
+			totalItems: state => state.totalItems,
+			isNewItem: state => state.isNewItem
 		})
 	},
 	methods: {
 		formatDate,
 		getColor,
 		close() {
+			this.$store.commit('SET_NEW_ITEM', false)
 			this.dialog = false;
 		}
 	},
 	watch: {
+		isNewItem(newVal) {
+			if(newVal === true) {
+				this.dialog = true;
+			}
+		},
+
 		options: {
 			// eslint-disable-next-line
 			async handler(opts, oldOpts) {
@@ -123,10 +131,13 @@ export default {
 		this.loading = false;
 	},
 	mounted() {
-		const { newItem } = this.$route.params;
-		if (newItem) {
+		if(this.isNewItem) {
 			this.dialog = true;
 		}
+		// const { newItem } = this.$route.params;
+		// if (newItem) {
+		// 	this.dialog = true;
+		// }
 	},
 	components: {
 		AddEditBpItem

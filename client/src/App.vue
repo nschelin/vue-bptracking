@@ -51,7 +51,7 @@
 
 		<v-dialog v-model="dialog" width="600px" persistent>
 			<LoginComponent v-if="!isAuthenticated" @close="close" />
-		</v-dialog>
+		</v-dialog> 
 
 		<v-footer app class="justify-end" color="primary">
 			<div class="white--text">&copy; {{ year }}</div>
@@ -78,6 +78,11 @@ export default {
 		// eslint-disable-next-line
 		$route(from, to) {
 			this.drawer = false;
+		},
+		isAuthenticated(newVal) {
+			if(newVal) {
+				this.dialog = false;
+			}
 		}
 	},
 	computed: {
@@ -87,7 +92,13 @@ export default {
 	},
 	methods: {
 		goToBpItems() {
-			this.$router.push({ name: 'BloodPressure', params: { newItem: 1 } });
+			this.$store.commit('SET_NEW_ITEM', true);
+
+			if(this.$route.path != '/bp') {
+				// this.$router.push({ name: 'BloodPressure', params: { newItem: 1 } });
+				this.$router.push({ name: 'BloodPressure' });
+			}
+			
 		},
 		async logout() {
 			await this.$store.dispatch('logout');

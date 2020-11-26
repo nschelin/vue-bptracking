@@ -6,6 +6,7 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
 	state: {
+		isNewItem: false,
 		isAuthenticated: false,
 		name: {
 			fistName: '',
@@ -22,10 +23,13 @@ const store = new Vuex.Store({
 		}
 	},
 	mutations: {
-		LOGIN(state, { token }) {
+		LOGIN(state, { token, msg }) {
 			if (token) {
 				state.isAuthenticated = true;
 				localStorage.setItem('token', token);
+			}
+			if(msg) {
+				console.log(msg);
 			}
 		},
 		LOGOUT() {
@@ -39,11 +43,18 @@ const store = new Vuex.Store({
 			state.bpItems = data.bpItems;
 			state.totalItems = data.totalItems;
 			state.totalPages = data.totalPages;
-		}
+		},
+		SET_NEW_ITEM(state, val) {
+			state.isNewItem = val;
+		},
+		// ITEM_ADDED(state, refresh) {
+
+		// }
 	},
 	actions: {
 		async login({ commit }, credentials) {
-			const response = await loginService.login(credentials.email, credentials.password);
+			const { email, password } = credentials;
+			const response = await loginService.login(email, password);
 			commit('LOGIN', response.data);
 		},
 		async logout({ commit }) {
@@ -56,6 +67,9 @@ const store = new Vuex.Store({
 		async getBpItems({ commit }, pagination) {
 			const { data } = await bpService.getBpItems(pagination.page, pagination.sortField, pagination.sortDir);
 			commit('SET_BPITEMS', data);
+		},
+		async addBpItem(state, data) {
+			 await bpService.addBpItem(data);
 		}
 	},
 	modules: {}
