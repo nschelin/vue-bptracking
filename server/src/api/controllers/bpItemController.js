@@ -98,7 +98,7 @@ exports.add = async (req, res) => {
 
 	res.json({
 		message: 'Saved',
-		bpItemId: bpItem._id,
+		bpItem: await getBpItem(bpItem._id), // TODO: Refactor w/o call to db
 	});
 };
 

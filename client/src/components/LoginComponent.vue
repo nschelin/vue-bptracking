@@ -60,7 +60,9 @@ export default {
 		reset() {
 			this.email = this.password = '';
 			this.errors = false;
-			this.$refs.loginForm.reset();
+			if(this.$refs.loginForm) {
+				this.$refs.loginForm.reset();
+			}
 		}
 	}
 };

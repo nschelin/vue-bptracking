@@ -47,9 +47,9 @@ const store = new Vuex.Store({
 		SET_NEW_ITEM(state, val) {
 			state.isNewItem = val;
 		},
-		// ITEM_ADDED(state, refresh) {
-
-		// }
+		ADD_ITEM(state, bpItem) {
+			state.bpItems.push(bpItem);
+		}
 	},
 	actions: {
 		async login({ commit }, credentials) {
@@ -68,8 +68,12 @@ const store = new Vuex.Store({
 			const { data } = await bpService.getBpItems(pagination.page, pagination.sortField, pagination.sortDir);
 			commit('SET_BPITEMS', data);
 		},
-		async addBpItem(state, data) {
-			 await bpService.addBpItem(data);
+		async addBpItem({ commit }, data) {
+			const response = await bpService.addBpItem(data);
+			if(response.data.bpItem) {
+				// TODO: Re-evaluate if need to add directly to store
+				commit('ADD_BPITEM', response.data.bpItem)
+			}
 		}
 	},
 	modules: {}
