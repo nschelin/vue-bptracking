@@ -17,14 +17,16 @@
 				<v-chip label class="white--text" :color="getColor(item.bpm, 'bpm')">{{ item.bpm }}</v-chip>
 			</template>
 		</v-data-table>
-		<svg id="barChart" width="500" height="500"></svg>
+		<!-- <svg id="barChart" width="500" height="500"></svg> -->
+		<Chart :config="chartConfig" :data="recentBpItems" />
 	</div>
 </template>
 
 <script>
+import Chart from '@/components/Chart';
 import { mapState } from 'vuex';
 import { formatDate, getColor } from '@/util';
-import * as d3 from 'd3';
+// import * as d3 from 'd3';
 
 export default {
 	name: 'RecentItems',
@@ -63,7 +65,35 @@ export default {
 				value: 'bpm'
 			}
 		],
-		chart: null
+		chartConfig: {
+			type: 'bar',
+            data: {
+                labels: ['Red', 'Blue'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12,19],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                    	'rgba(54, 162, 235, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+				responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        }
 	}),
 	computed: {
 		...mapState({
@@ -76,50 +106,54 @@ export default {
 	},
 	async created() {
 		await this.$store.dispatch('getRecent', this.maxItems);
-		const svg = d3.select('#barChart');
-		const margin = 200,
-			width = svg.attr('width') - margin,
-			height = svg.attr('height') - margin;
 
-		const xScale = d3
-			.scaleBand()
-			.range([0, width])
-			.padding(0.4);
-		const yScale = d3.scaleLinear().range([height, 0]);
+		// const svg = d3.select('#barChart');
+		// const margin = 200,
+		// 	width = svg.attr('width') - margin,
+		// 	height = svg.attr('height') - margin;
 
-		const g = svg.append('g').attr('transform', 'translate(100,100)');
+		// const xScale = d3
+		// 	.scaleBand()
+		// 	.range([0, width])
+		// 	.padding(0.4);
+		// const yScale = d3.scaleLinear().range([height, 0]);
 
-		xScale.domain(this.recentBpItems.map(d => d.systolic));
-		yScale.domain([0, d3.max(this.recentBpItems, d => d.systolic)]);
-		g.append('g')
-			.attr('transform', `translate(0, ${height})`)
-			.call(d3.axisBottom(xScale));
+		// const g = svg.append('g').attr('transform', 'translate(100,100)');
 
-		g.append('g').call(
-			d3
-				.axisLeft(yScale)
-				.tickFormat(d => `${d}`)
-				.ticks(5)
-		);
+		// xScale.domain(this.recentBpItems.map(d => d.systolic));
+		// yScale.domain([0, d3.max(this.recentBpItems, d => d.systolic)]);
+		// g.append('g')
+		// 	.attr('transform', `translate(0, ${height})`)
+		// 	.call(d3.axisBottom(xScale));
 
-		g.selectAll('.bar')
-			.data(this.recentBpItems)
-			.enter()
-			.append('rect')
-			.attr('class', d => {
-				const val = d.systolic;
-				if (val <= 129) {
-					return 'bar normal';
-				} else if (val < 139 && val > 129) {
-					return 'bar stage-1-high';
-				} else {
-					return 'bar stage-2-high';
-				}
-			})
-			.attr('x', d => xScale(d.systolic))
-			.attr('y', d => yScale(d.systolic))
-			.attr('width', xScale.bandwidth())
-			.attr('height', d => height - yScale(d.systolic));
+		// g.append('g').call(
+		// 	d3
+		// 		.axisLeft(yScale)
+		// 		.tickFormat(d => `${d}`)
+		// 		.ticks(5)
+		// );
+
+		// g.selectAll('.bar')
+		// 	.data(this.recentBpItems)
+		// 	.enter()
+		// 	.append('rect')
+		// 	.attr('class', d => {
+		// 		const val = d.systolic;
+		// 		if (val <= 129) {
+		// 			return 'bar normal';
+		// 		} else if (val < 139 && val > 129) {
+		// 			return 'bar stage-1-high';
+		// 		} else {
+		// 			return 'bar stage-2-high';
+		// 		}
+		// 	})
+		// 	.attr('x', d => xScale(d.systolic))
+		// 	.attr('y', d => yScale(d.systolic))
+		// 	.attr('width', xScale.bandwidth())
+		// 	.attr('height', d => height - yScale(d.systolic));
+	},
+	components: {
+		Chart
 	}
 };
 </script>
