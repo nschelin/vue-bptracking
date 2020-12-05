@@ -10,7 +10,7 @@
 			<template #item.systolic="{ item }">
 				<v-chip label class="white--text" :color="getColor(item.systolic, 'sys')">{{ item.systolic }}</v-chip>
 			</template>
-			<template #item.diastolic="{ item }">
+			<template v-slot:item.diastolic="{ item }">
 				<v-chip label class="white--text" :color="getColor(item.diastolic, 'dia')">{{ item.diastolic }}</v-chip>
 			</template>
 			<template #item.bpm="{ item }">
@@ -18,7 +18,7 @@
 			</template>
 		</v-data-table>
 		<!-- <svg id="barChart" width="500" height="500"></svg> -->
-		<Chart :config="chartConfig" :data="recentBpItems" />
+		<Chart :config="chartConfig" :data="recentBpItems" :chart-title="'Recent Items'" :show-title="true" />
 	</div>
 </template>
 

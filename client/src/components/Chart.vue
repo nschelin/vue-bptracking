@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div>Chart</div>
+        <div v-if="showTitle">{{chartTitle}}</div>
         <canvas id="myChart" style="height: 100vh; width: 100vw;"></canvas>
     </div>
 </template>
@@ -11,6 +11,14 @@ import Chart from 'chart.js';
 export default {
     name: 'Chart',
     props: {
+        chartTitle: {
+            type: String,
+            default: 'Chart Title'
+        },
+        showTitle: {
+            type: Boolean,
+            default: true
+        },
         config: {
             type: Object,
             required: true
